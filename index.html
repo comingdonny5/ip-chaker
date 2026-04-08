@@ -1,18 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>IP Info</title>
+<title>IP Info - Creator by Sagor</title>
 
 <style>
 body {
   background: #121212;
   color: #fff;
-  font-family: Arial;
+  font-family: Arial, sans-serif;
   text-align: center;
   padding: 15px;
+  margin: 0;
 }
 
+/* Green Shine Animation */
 .creator {
   font-size: 26px;
   font-weight: bold;
@@ -31,16 +34,23 @@ body {
 .whatsapp {
   font-size: 18px;
   margin-bottom: 15px;
+  color: #bbb;
 }
 
 button.refresh {
   background: #00cc66;
   border: none;
-  padding: 10px 16px;
+  padding: 12px 20px;
   color: white;
   border-radius: 6px;
   font-size: 18px;
   margin-bottom: 20px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+button.refresh:active {
+  transform: scale(0.95);
 }
 
 .chart {
@@ -51,51 +61,57 @@ button.refresh {
   margin: auto;
   text-align: left;
   font-size: 18px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.5);
 }
 
 .row {
   display: flex;
   justify-content: space-between;
-  border-bottom: 1px dashed #555;
-  padding: 8px 0;
+  align-items: center;
+  border-bottom: 1px dashed #444;
+  padding: 10px 0;
 }
 
 .copy {
   background: #0099ff;
   border: none;
-  padding: 4px 10px;
-  font-size: 14px;
-  margin-left: 5px;
+  padding: 5px 10px;
+  font-size: 12px;
+  color: white;
+  margin-left: 8px;
   border-radius: 4px;
-}
-
-.isp-row {
-  font-size: 14px;
+  cursor: pointer;
 }
 
 .isp-value {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  max-width: 150px;
+  font-size: 14px;
 }
 
+/* Progress Bar */
 .disguise-box {
-  margin-top: 15px;
+  margin-top: 20px;
 }
 
-.bar {
+.bar-container {
   background: #333;
   height: 35px;
   border-radius: 6px;
   overflow: hidden;
+  position: relative;
 }
 
 .fill {
   height: 100%;
+  width: 0%; /* Initial width */
   text-align: center;
   line-height: 35px;
   font-weight: bold;
   color: #fff;
+  transition: width 1s ease-in-out, background 0.5s;
 }
 </style>
 </head>
@@ -105,102 +121,139 @@ button.refresh {
 <div class="creator">CREATOR BY SAGOR</div>
 <div class="whatsapp">Whatsapp : 01922755197</div>
 
-<button class="refresh" onclick="loadData()">Refresh</button>
+<button class="refresh" onclick="loadData()">Refresh Data</button>
 
 <div class="chart">
+  <div class="row">
+    <span>Your IP:</span>
+    <span id="ip">Loading...</span>
+  </div>
 
-<div class="row"><span>Your IP:</span><span id="ip">...</span></div>
+  <div class="row">
+    <span>ASN:</span>
+    <span>
+      <span id="asn">---</span>
+      <button class="copy" onclick="copyText('asn')">Copy</button>
+    </span>
+  </div>
 
-<div class="row">
-<span>ASN:</span>
-<span>
-<span id="asn"></span>
-<button class="copy" onclick="copyText('asn')">Copy</button>
-</span>
-</div>
+  <div class="row">
+    <span>City:</span>
+    <span id="city">---</span>
+  </div>
 
-<div class="row"><span>City:</span><span id="city"></span></div>
-<div class="row"><span>Region:</span><span id="region"></span></div>
-<div class="row"><span>Country:</span><span id="country"></span></div>
-<div class="row"><span>OS:</span><span id="os"></span></div>
+  <div class="row">
+    <span>Region:</span>
+    <span id="region">---</span>
+  </div>
 
-<div class="row">
-<span>Timezone City:</span>
-<span>
-<span id="tz"></span>
-<button class="copy" onclick="copyText('tz')">Copy</button>
-</span>
-</div>
+  <div class="row">
+    <span>Country:</span>
+    <span id="country">---</span>
+  </div>
 
-<div class="row isp-row">
-<span>ISP:</span>
-<span id="isp" class="isp-value"></span>
-</div>
+  <div class="row">
+    <span>OS:</span>
+    <span id="os">---</span>
+  </div>
 
-<div class="disguise-box">
-<div class="bar">
-<div class="fill" id="bar">Loading...</div>
-</div>
-</div>
+  <div class="row">
+    <span>Timezone:</span>
+    <span>
+      <span id="tz">---</span>
+      <button class="copy" onclick="copyText('tz')">Copy</button>
+    </span>
+  </div>
 
+  <div class="row">
+    <span>ISP:</span>
+    <span id="isp" class="isp-value">---</span>
+  </div>
+
+  <div class="disguise-box">
+    <div class="bar-container">
+      <div class="fill" id="bar">Loading...</div>
+    </div>
+  </div>
 </div>
 
 <script>
 async function loadData() {
+  const bar = document.getElementById('bar');
+  bar.style.width = "10%";
+  bar.innerText = "Fetching...";
+  bar.style.background = "#333";
+
   try {
-    const res = await fetch('https://ipapi.co/json/');
-    const data = await res.json();
+    // HTTPS সমর্থিত API ব্যবহার করা হয়েছে
+    const response = await fetch('https://ipapi.co/json/');
+    if (!response.ok) throw new Error("Network issues");
+    
+    const data = await response.json();
 
-    document.getElementById('ip').innerText = data.ip;
-    document.getElementById('asn').innerText = data.org;
+    // Data Mapping
+    document.getElementById('ip').innerText = data.ip || "N/A";
+    document.getElementById('asn').innerText = data.asn || "N/A";
+    document.getElementById('city').innerText = data.city || "N/A";
+    document.getElementById('region').innerText = data.region || "N/A";
+    document.getElementById('country').innerText = data.country_name || "N/A";
+    document.getElementById('isp').innerText = data.org || "N/A";
+    
+    // Timezone Format (e.g. Asia/Dhaka -> Dhaka)
+    let tzName = data.timezone ? data.timezone.split("/").pop().replace("_", " ") : "N/A";
+    document.getElementById('tz').innerText = tzName;
 
-    document.getElementById('city').innerText = data.city;
-    document.getElementById('region').innerText = data.region;
-    document.getElementById('country').innerText = data.country_name;
-
+    // OS Detection
     let ua = navigator.userAgent;
-    let os = "Unknown";
-
+    let os = "Unknown Device";
     if (ua.includes("Android")) os = "Android";
-    else if (ua.includes("iPhone")) os = "iOS";
+    else if (ua.includes("iPhone") || ua.includes("iPad")) os = "iOS";
     else if (ua.includes("Windows")) os = "Windows";
     else if (ua.includes("Mac")) os = "MacOS";
-
+    else if (ua.includes("Linux")) os = "Linux";
     document.getElementById('os').innerText = os;
 
-    let tz = data.timezone.split("/")[1];
-    document.getElementById('tz').innerText = tz;
+    // Disguise Score Logic
+    let score = 95;
+    const org = (data.org || "").toLowerCase();
+    
+    if (org.includes("vpn") || org.includes("proxy") || org.includes("hosting") || org.includes("google")) {
+      score -= 30;
+    }
 
-    document.getElementById('isp').innerText = data.org;
+    // Random variation for realism
+    score += Math.floor(Math.random() * 5) - 2;
+    if (score > 100) score = 100;
+    if (score < 30) score = 30;
 
-    // disguise logic
-    let score = 90;
-
-    score += Math.floor(Math.random() * 6) - 3;
-
-    if (score > 98) score = 98;
-    if (score < 60) score = 60;
-
-    let bar = document.getElementById('bar');
-
+    // Update Progress Bar
     bar.style.width = score + "%";
-    bar.innerText = "Your Disguise: " + score + "%";
+    bar.innerText = "Disguise: " + score + "%";
 
     if (score < 70) bar.style.background = "#ff3333";
     else if (score < 85) bar.style.background = "#ffcc00";
     else bar.style.background = "#00cc66";
 
-  } catch (err) {
-    document.getElementById('bar').innerText = "Failed to load!";
-    console.error(err);
+  } catch (error) {
+    console.error("Error:", error);
+    document.getElementById('ip').innerText = "Failed to load";
+    bar.style.width = "100%";
+    bar.innerText = "Error: Use HTTPS";
+    bar.style.background = "red";
   }
 }
 
 function copyText(id) {
-  navigator.clipboard.writeText(document.getElementById(id).innerText);
+  const text = document.getElementById(id).innerText;
+  if(text !== "---" && text !== "N/A") {
+    navigator.clipboard.writeText(text).then(() => {
+      alert("Copied: " + text);
+    });
+  }
 }
 
-loadData();
+// Initial load
+window.onload = loadData;
 </script>
 
 </body>

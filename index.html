@@ -13,7 +13,6 @@ body {
   padding: 15px;
 }
 
-/* Green Shine */
 .creator {
   font-size: 26px;
   font-weight: bold;
@@ -70,7 +69,6 @@ button.refresh {
   border-radius: 4px;
 }
 
-/* ISP smaller */
 .isp-row {
   font-size: 14px;
 }
@@ -81,7 +79,6 @@ button.refresh {
   text-overflow: ellipsis;
 }
 
-/* disguise */
 .disguise-box {
   margin-top: 15px;
 }
@@ -112,110 +109,91 @@ button.refresh {
 
 <div class="chart">
 
-<div class="row">
-  <span>Your IP:</span>
-  <span id="ip">...</span>
-</div>
+<div class="row"><span>Your IP:</span><span id="ip">...</span></div>
 
 <div class="row">
-  <span>ASN:</span>
-  <span>
-    <span id="asn"></span>
-    <button class="copy" onclick="copyText('asn')">Copy</button>
-  </span>
+<span>ASN:</span>
+<span>
+<span id="asn"></span>
+<button class="copy" onclick="copyText('asn')">Copy</button>
+</span>
 </div>
 
-<div class="row">
-  <span>City:</span>
-  <span id="city"></span>
-</div>
+<div class="row"><span>City:</span><span id="city"></span></div>
+<div class="row"><span>Region:</span><span id="region"></span></div>
+<div class="row"><span>Country:</span><span id="country"></span></div>
+<div class="row"><span>OS:</span><span id="os"></span></div>
 
 <div class="row">
-  <span>Region:</span>
-  <span id="region"></span>
-</div>
-
-<div class="row">
-  <span>Country:</span>
-  <span id="country"></span>
-</div>
-
-<div class="row">
-  <span>OS:</span>
-  <span id="os"></span>
-</div>
-
-<div class="row">
-  <span>Timezone City:</span>
-  <span>
-    <span id="tz"></span>
-    <button class="copy" onclick="copyText('tz')">Copy</button>
-  </span>
+<span>Timezone City:</span>
+<span>
+<span id="tz"></span>
+<button class="copy" onclick="copyText('tz')">Copy</button>
+</span>
 </div>
 
 <div class="row isp-row">
-  <span>ISP:</span>
-  <span id="isp" class="isp-value"></span>
+<span>ISP:</span>
+<span id="isp" class="isp-value"></span>
 </div>
 
 <div class="disguise-box">
-  <div class="bar">
-    <div class="fill" id="bar">Loading...</div>
-  </div>
+<div class="bar">
+<div class="fill" id="bar">Loading...</div>
+</div>
 </div>
 
 </div>
 
 <script>
 async function loadData() {
-  const res = await fetch('http://ip-api.com/json/');
-  const data = await res.json();
+  try {
+    const res = await fetch('https://ipapi.co/json/');
+    const data = await res.json();
 
-  document.getElementById('ip').innerText = data.query;
+    document.getElementById('ip').innerText = data.ip;
+    document.getElementById('asn').innerText = data.org;
 
-  let parts = data.as.split(" ");
-  document.getElementById('asn').innerText = parts[0];
+    document.getElementById('city').innerText = data.city;
+    document.getElementById('region').innerText = data.region;
+    document.getElementById('country').innerText = data.country_name;
 
-  document.getElementById('city').innerText = data.city;
-  document.getElementById('region').innerText = data.regionName;
-  document.getElementById('country').innerText = data.country;
+    let ua = navigator.userAgent;
+    let os = "Unknown";
 
-  let ua = navigator.userAgent;
-  let os = "Unknown";
+    if (ua.includes("Android")) os = "Android";
+    else if (ua.includes("iPhone")) os = "iOS";
+    else if (ua.includes("Windows")) os = "Windows";
+    else if (ua.includes("Mac")) os = "MacOS";
 
-  if (ua.includes("Android")) os = "Android";
-  else if (ua.includes("iPhone")) os = "iOS";
-  else if (ua.includes("Windows")) os = "Windows";
-  else if (ua.includes("Mac")) os = "MacOS";
+    document.getElementById('os').innerText = os;
 
-  document.getElementById('os').innerText = os;
+    let tz = data.timezone.split("/")[1];
+    document.getElementById('tz').innerText = tz;
 
-  let tz = data.timezone.split("/")[1];
-  document.getElementById('tz').innerText = tz;
+    document.getElementById('isp').innerText = data.org;
 
-  document.getElementById('isp').innerText = data.isp;
+    // disguise logic
+    let score = 90;
 
-  // disguise logic
-  let score = 90;
+    score += Math.floor(Math.random() * 6) - 3;
 
-  if (data.proxy) score -= 25;
-  if (data.hosting) score -= 20;
+    if (score > 98) score = 98;
+    if (score < 60) score = 60;
 
-  if (data.isp.toLowerCase().includes("mobile")) score -= 5;
+    let bar = document.getElementById('bar');
 
-  score += Math.floor(Math.random() * 6) - 3;
+    bar.style.width = score + "%";
+    bar.innerText = "Your Disguise: " + score + "%";
 
-  if (score > 98) score = 98;
-  if (score < 60) score = 60;
+    if (score < 70) bar.style.background = "#ff3333";
+    else if (score < 85) bar.style.background = "#ffcc00";
+    else bar.style.background = "#00cc66";
 
-  let bar = document.getElementById('bar');
-
-  bar.style.width = score + "%";
-  bar.innerText = "Your Disguise: " + score + "%";
-
-  if (score < 70) bar.style.background = "#ff3333";
-  else if (score < 85) bar.style.background = "#ffcc00";
-  else bar.style.background = "#00cc66";
+  } catch (err) {
+    document.getElementById('bar').innerText = "Failed to load!";
+    console.error(err);
+  }
 }
 
 function copyText(id) {

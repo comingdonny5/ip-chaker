@@ -1,122 +1,91 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>IP Finder Ultimate - Sagor</title>
-<style>
-body {
-  background: radial-gradient(circle at top, #1a2a3a 0%, #000000 100%);
-  color: #fff;
-  font-family: 'Segoe UI', Arial, sans-serif;
-  text-align: center;
-  padding: 15px;
-  margin: 0;
-  min-height: 100vh;
-}
-.top-header { display: flex; align-items: center; justify-content: flex-start; padding: 10px; margin-bottom: 10px; }
-.globe-icon { font-size: 24px; margin-right: 10px; border: 1.5px solid #fff; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; }
-.ip-finder-text { font-size: 22px; font-weight: bold; text-transform: uppercase; border-bottom: 3px solid #fff; }
-.creator { font-size: 26px; font-weight: bold; background: linear-gradient(90deg, #00ff99, #00cc66, #00ff99); background-size: 200% auto; color: transparent; -webkit-background-clip: text; animation: shine 3s linear infinite; margin-top: 15px; }
-@keyframes shine { 0% { background-position: 0% } 100% { background-position: 200% } }
-button.refresh { background: #00cc66; border: none; padding: 12px 30px; color: white; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; margin-bottom: 25px; box-shadow: 0 4px 15px rgba(0, 204, 102, 0.3); }
-.search-container { margin-bottom: 30px; }
-.input-box { background: #111; border: 1px solid #444; padding: 12px; border-radius: 6px; color: #fff; width: 180px; outline: none; }
-.search-btn { background: #0099ff; border: none; padding: 12px 20px; color: white; border-radius: 6px; margin-left: 8px; cursor: pointer; font-weight: bold; }
-.chart { background: rgba(20, 20, 20, 0.9); border-radius: 15px; padding: 20px; max-width: 420px; margin: auto; text-align: left; border: 1px solid #333; }
-.row { display: flex; justify-content: space-between; padding: 14px 0; border-bottom: 1px dashed #333; }
-.copy-btn { background: #222; border: 1px solid #444; padding: 4px 10px; font-size: 11px; color: #00ff99; border-radius: 4px; cursor: pointer; }
-.bar-container { margin-top: 25px; background: #000; height: 40px; border-radius: 8px; overflow: hidden; border: 1px solid #222; }
-.fill { height: 100%; width: 0%; text-align: center; line-height: 40px; font-weight: bold; transition: width 1.5s ease-in-out; color: #000; }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Site Update Notice</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #000; /* ব্যাকগ্রাউন্ড কালো */
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .notice-container {
+            width: 90%;
+            max-width: 400px;
+            background: #111;
+            border: 2px solid #00ffcc;
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 0 30px rgba(0, 255, 204, 0.2);
+        }
+
+        .icon-box {
+            font-size: 50px;
+            margin-bottom: 20px;
+        }
+
+        .message-box {
+            background: #00ff99; /* তোমার চাওয়া সবুজ ব্যাকগ্রাউন্ড */
+            color: #000;
+            padding: 20px;
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: bold;
+            line-height: 1.6;
+            margin-bottom: 25px;
+            box-shadow: 0 5px 15px rgba(0, 255, 153, 0.3);
+        }
+
+        .action-btn {
+            display: inline-block;
+            text-decoration: none;
+            background: linear-gradient(90deg, #0099ff, #0066cc); /* ভালো কালারের কলাম/বাটন */
+            color: #fff;
+            padding: 15px 40px;
+            border-radius: 50px;
+            font-size: 20px;
+            font-weight: bold;
+            transition: 0.3s;
+            box-shadow: 0 4px 15px rgba(0, 153, 255, 0.4);
+            text-transform: uppercase;
+        }
+
+        .action-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(0, 153, 255, 0.6);
+        }
+
+        .footer-text {
+            margin-top: 20px;
+            color: #555;
+            font-size: 12px;
+            letter-spacing: 1px;
+        }
+    </style>
 </head>
 <body>
 
-<div class="top-header"><div class="globe-icon">🌐</div><div class="ip-finder-text">Ip-finder</div></div>
-<div class="creator" id="creator-name">CREATOR BY SAGOR</div>
-<div class="whatsapp">Whatsapp : 01922755197</div>
+    <div class="notice-container">
+        <div class="icon-box">🛡️</div>
+        
+        <div class="message-box">
+            এই সাইটটি পার্মানেন্টলি বন্ধ করে আপডেট সাইট চালু করা হয়েছে, আপডেট সাইট পেতে "এগিয়ে যান" এ ক্লিক করুন।
+        </div>
 
-<button class="refresh" onclick="initLoad()">Refresh Data</button>
+        <a href="https://powerbydevil420.github.io/Devil/" class="action-btn">
+            এগিয়ে যান
+        </a>
 
-<div class="search-container">
-  <span id="search-instr" style="display:block; color:#bbb; margin-bottom:10px;">Enter your ip address to find details</span>
-  <input type="text" id="ip-input" class="input-box" placeholder="e.g. 8.8.8.8">
-  <button class="search-btn" onclick="searchAction()">Search</button>
-</div>
+        <div class="footer-text">POWERED BY DEVIL</div>
+    </div>
 
-<div class="chart">
-  <div class="row"><b>Your IP:</b> <span id="res-ip">Connecting...</span></div>
-  <div class="row"><b>ASN:</b> <span><span id="res-asn">---</span> <button class="copy-btn" onclick="copyVal('res-asn', this)">Copy</button></span></div>
-  <div class="row"><b>City:</b> <span id="res-city">---</span></div>
-  <div class="row"><b>Region:</b> <span id="res-region">---</span></div>
-  <div class="row"><b>Country:</b> <span id="res-country">---</span></div>
-  <div class="row"><b>OS:</b> <span id="res-os">---</span></div>
-  <div class="row"><b>Timezone:</b> <span><span id="res-tz">---</span> <button class="copy-btn" onclick="copyVal('res-tz', this)">Copy</button></span></div>
-  <div class="row"><b>ISP:</b> <span id="res-isp" style="color:#00ff99;">---</span></div>
-  <div class="bar-container"><div class="fill" id="bar">Checking...</div></div>
-</div>
-
-<script>
-const boldMap = {'A':'𝐀','B':'𝐁','C':'𝐂','D':'𝐃','E':'𝐄','F':'𝐅','G':'𝐆','H':'𝐇','I':'𝐈','J':'𝐉','K':'𝐊','L':'𝐋','M':'𝐌','N':'𝐍','O':'𝐎','P':'𝐏','Q':'𝐐','R':'𝐑','S':'𝐒','T':'𝐓','U':'𝐔','V':'𝐕','W':'𝐖','X':'𝐗','Y':'𝐘','Z':'𝐐','a':'𝐚','b':'𝐛','c':'𝐜','d':'𝐝','e':'𝐞','f':'𝐟','g':'𝐠','h':'𝐡','i':'𝐢','j':'𝐣','k':'𝐤','l':'𝐥','m':'𝐦','n':'𝐧','o':'𝐨','p':'𝐩','q':'𝐪','r':'𝐫','s':'𝐬','t':'𝐭','u':'𝐮','v':'𝐯','w':'𝐰','x':'𝐱','y':'𝐲','z':'𝐳','0':'𝟎','1':'𝟏','2':'𝟐','3':'𝟑','4':'𝟒','5':'𝟓','6':'𝟔','7':'𝟕','8':'𝟖','9':'𝟗'};
-function toBold(t) { return t.split('').map(c => boldMap[c] || c).join(''); }
-
-async function initLoad(ip = '') {
-  const bar = document.getElementById('bar');
-  bar.style.width = "30%"; bar.innerText = "Analyzing..."; bar.style.background = "#444";
-
-  // Multi-Source Fetching
-  let data = await tryAPIs(ip);
-  if(data) updateUI(data);
-  else { bar.style.width = "100%"; bar.innerText = "API Limit Exceeded!"; bar.style.background = "red"; }
-}
-
-async function tryAPIs(ip) {
-  const sources = [
-    `https://ipapi.co/${ip}/json/`,
-    `https://ipwho.is/${ip}`,
-    `https://api.ipify.org?format=json` // Last resort just for IP
-  ];
-  for(let url of sources) {
-    try {
-      let r = await fetch(url);
-      let d = await r.json();
-      if(d.ip || d.query) return d;
-    } catch(e) {}
-  }
-  return null;
-}
-
-function updateUI(d) {
-  document.getElementById('res-ip').innerText = d.ip || d.query || "N/A";
-  document.getElementById('res-asn').innerText = d.asn || d.connection?.asn || "N/A";
-  document.getElementById('res-city').innerText = d.city || "N/A";
-  document.getElementById('res-region').innerText = d.region || d.region_name || "N/A";
-  document.getElementById('res-country').innerText = d.country || d.country_name || "N/A";
-  document.getElementById('res-isp').innerText = d.org || d.connection?.isp || "N/A";
-  document.getElementById('res-tz').innerText = d.timezone || d.timezone?.id?.split('/').pop() || "N/A";
-  document.getElementById('res-os').innerText = navigator.userAgent.includes("Android") ? "Android" : "Device";
-
-  // Smart Disguise Logic
-  let score = 98;
-  const isp = (d.org || d.connection?.isp || "").toLowerCase();
-  if(d.security?.is_vpn || isp.includes("vpn") || isp.includes("proxy")) score = 45;
-  else if(isp.includes("cloud") || isp.includes("hosting")) score = 75;
-  
-  score -= Math.floor(Math.random() * 4);
-  const bar = document.getElementById('bar');
-  bar.style.width = score + "%";
-  bar.innerText = toBold("Your Disguise: ") + score + "%";
-  bar.style.background = score > 85 ? "#00ff99" : (score > 60 ? "#ffcc00" : "#ff4444");
-}
-
-function searchAction() { const v = document.getElementById('ip-input').value.trim(); if(v) initLoad(v); }
-function copyVal(id, btn) { navigator.clipboard.writeText(document.getElementById(id).innerText); btn.innerText = "Copied!"; setTimeout(() => btn.innerText = "Copy", 1000); }
-
-window.onload = () => {
-  document.getElementById('creator-name').innerText = toBold("CREATOR BY SAGOR");
-  document.getElementById('search-instr').innerText = toBold("Enter your ip address to find details");
-  initLoad();
-};
-</script>
 </body>
 </html>
